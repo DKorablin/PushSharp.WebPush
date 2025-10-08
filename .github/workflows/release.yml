@@ -91,7 +91,7 @@ jobs:
     - name: Publish GitHub Release
       uses: ncipollo/release-action@v1
       with:
-        artifacts: ${{github.workspace}}\bin\*.zip
+        artifacts: ${{github.workspace}}\bin\Release\*.zip
         tag: ${{ needs.version.outputs.new_tag }}
         name: Auto ${{ needs.version.outputs.new_tag }}
         body: ${{ needs.version.outputs.changelog }}
