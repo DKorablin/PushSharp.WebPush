@@ -13,7 +13,6 @@
 		<PackageLicenseUrl>https://github.com/web-push-libs/web-push-csharp/blob/master/LICENSE</PackageLicenseUrl>
 		<RepositoryUrl>https://github.com/DKorablin/PushSharp.WebPush</RepositoryUrl>
 		<PackageTags>web push notifications vapid</PackageTags>
-		<PublishRepositoryUrl>true</PublishRepositoryUrl>
 		<PackageReadmeFile>README.md</PackageReadmeFile>
 	</PropertyGroup>
 

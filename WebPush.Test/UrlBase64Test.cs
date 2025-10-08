@@ -12,14 +12,14 @@ namespace WebPush.Test
 		public void TestBase64UrlDecode()
 		{
 			var expected = new Byte[3] { 181, 235, 45 };
-			var actual = UrlBase64.Decode(@"test");
+			var actual = UrlBase64.Decode("test");
 			Assert.IsTrue(actual.SequenceEqual(expected));
 		}
 
 		[TestMethod]
 		public void TestBase64UrlEncode()
 		{
-			var expected = @"test";
+			var expected = "test";
 			var actual = UrlBase64.Encode(new Byte[3] { 181, 235, 45 });
 			Assert.AreEqual(expected, actual);
 		}

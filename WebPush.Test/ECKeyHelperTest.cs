@@ -9,9 +9,9 @@ namespace WebPush.Test
 	[TestClass]
 	public class ECKeyHelperTest
 	{
-		private const String TestPublicKey = @"BCvKwB2lbVUYMFAaBUygooKheqcEU-GDrVRnu8k33yJCZkNBNqjZj0VdxQ2QIZa4kV5kpX9aAqyBKZHURm6eG1A";
+		private const String TestPublicKey = "BCvKwB2lbVUYMFAaBUygooKheqcEU-GDrVRnu8k33yJCZkNBNqjZj0VdxQ2QIZa4kV5kpX9aAqyBKZHURm6eG1A";
 
-		private const String TestPrivateKey = @"on6X5KmLEFIVvPP3cNX9kE0OF6PV9TJQXVbnKU2xEHI";
+		private const String TestPrivateKey = "on6X5KmLEFIVvPP3cNX9kE0OF6PV9TJQXVbnKU2xEHI";
 
 		[TestMethod]
 		public void TestGenerateKeys()

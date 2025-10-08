@@ -36,17 +36,17 @@ a GCM API key and VAPID keys.
 ```csharp
 using WebPush;
 
-var pushEndpoint = @"https://fcm.googleapis.com/fcm/send/efz_TLX_rLU:APA91bE6U0iybLYvv0F3mf6uDLB6....";
-var p256dh = @"BKK18ZjtENC4jdhAAg9OfJacySQiDVcXMamy3SKKy7FwJcI5E0DKO9v4V2Pb8NnAPN4EVdmhO............";
-var auth = @"fkJatBBEl...............";
+var pushEndpoint = "https://fcm.googleapis.com/fcm/send/efz_TLX_rLU:APA91bE6U0iybLYvv0F3mf6uDLB6....";
+var p256dh = "BKK18ZjtENC4jdhAAg9OfJacySQiDVcXMamy3SKKy7FwJcI5E0DKO9v4V2Pb8NnAPN4EVdmhO............";
+var auth = "fkJatBBEl...............";
 
-var subject = @"mailto:example@example.com";
-var publicKey = @"BDjASz8kkVBQJgWcD05uX3VxIs_gSHyuS023jnBoHBgUbg8zIJvTSQytR8MP4Z3-kzcGNVnM...............";
-var privateKey = @"mryM-krWj_6IsIMGsd8wNFXGBxnx...............";
+var subject = "mailto:example@example.com";
+var publicKey = "BDjASz8kkVBQJgWcD05uX3VxIs_gSHyuS023jnBoHBgUbg8zIJvTSQytR8MP4Z3-kzcGNVnM...............";
+var privateKey = "mryM-krWj_6IsIMGsd8wNFXGBxnx...............";
 
 var subscription = new PushSubscription(pushEndpoint, p256dh, auth);
 var vapidDetails = new VapidDetails(subject, publicKey, privateKey);
-//var gcmAPIKey = @"[your key here]";
+//var gcmAPIKey = "[your key here]";
 
 var webPushClient = new WebPushClient();
 try
@@ -69,7 +69,7 @@ var subscription = new PushSubscription(pushEndpoint, p256dh, auth);
 
 var options = new Dictionary<string,object>();
 options["vapidDetails"] = new VapidDetails(subject, publicKey, privateKey);
-//options["gcmAPIKey"] = @"[your key here]";
+//options["gcmAPIKey"] = "[your key here]";
 
 var webPushClient = new WebPushClient();
 try
@@ -144,7 +144,7 @@ URL Safe Base64 encoded strings.
 ### SetGCMAPIKey(apiKey)
 
 ```csharp
-webPushClient.SetGCMAPIKey(@"your-gcm-key");
+webPushClient.SetGCMAPIKey("your-gcm-key");
 ```
 
 #### Input
@@ -169,7 +169,7 @@ string audience = uri.Scheme + Uri.SchemeDelimiter + uri.Host;
 
 Dictionary<string, string> vapidHeaders = VapidHelper.GetVapidHeaders(
   audience,
-  @"mailto: example@example.com",
+  "mailto: example@example.com",
   publicKey,
   privateKey
 );

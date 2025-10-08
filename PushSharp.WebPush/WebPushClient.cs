@@ -66,7 +66,7 @@ namespace WebPush
 			}
 
 			if(String.IsNullOrEmpty(gcmApiKey))
-				throw new ArgumentException(@"The GCM API Key should be a non-empty string or null.", nameof(gcmApiKey));
+				throw new ArgumentNullException(nameof(gcmApiKey), "The GCM API Key should be a non-empty string or null.");
 
 			this._gcmApiKey = gcmApiKey;
 		}
@@ -89,12 +89,12 @@ namespace WebPush
 		public HttpRequestMessage GenerateRequestDetails(PushSubscription subscription, String payload, Dictionary<String, Object> options = null)
 		{
 			if(!Uri.IsWellFormedUriString(subscription.Endpoint, UriKind.Absolute))
-				throw new ArgumentException(@"You must pass in a subscription with at least a valid endpoint");
+				throw new ArgumentException("You must pass in a subscription with at least a valid endpoint", nameof(subscription));
 
 			var request = new HttpRequestMessage(HttpMethod.Post, subscription.Endpoint);
 
 			if(!String.IsNullOrEmpty(payload) && (String.IsNullOrEmpty(subscription.Auth) || String.IsNullOrEmpty(subscription.P256DH)))
-				throw new ArgumentException("To send a message with a payload, the subscription must have 'auth' and 'p256dh' keys.");
+				throw new ArgumentException("To send a message with a payload, the subscription must have 'auth' and 'p256dh' keys.", nameof(payload));
 
 			var currentGcmApiKey = this._gcmApiKey;
 			var currentVapidDetails = this._vapidDetails;
@@ -130,17 +130,12 @@ namespace WebPush
 			request.Headers.Add("TTL", timeToLive.ToString());
 
 			foreach(var header in extraHeaders)
-			{
 				request.Headers.Add(header.Key, header.Value.ToString());
-			}
 
 			if(!String.IsNullOrEmpty(payload))
 			{
 				if(String.IsNullOrEmpty(subscription.P256DH) || String.IsNullOrEmpty(subscription.Auth))
-				{
-					throw new ArgumentException(
-						@"Unable to send a message with payload to this subscription since it doesn't have the required encryption key");
-				}
+					throw new ArgumentException("Unable to send a message with payload to this subscription since it doesn't have the required encryption key", nameof(subscription));
 
 				var encryptedPayload = EncryptPayload(subscription, payload);
 
@@ -149,15 +144,15 @@ namespace WebPush
 				request.Content.Headers.ContentLength = encryptedPayload.Payload.Length;
 				request.Content.Headers.ContentEncoding.Add("aesgcm");
 				request.Headers.Add("Encryption", "salt=" + encryptedPayload.Base64EncodeSalt());
-				cryptoKeyHeader = @"dh=" + encryptedPayload.Base64EncodePublicKey();
+				cryptoKeyHeader = "dh=" + encryptedPayload.Base64EncodePublicKey();
 			} else
 			{
 				request.Content = new ByteArrayContent(new Byte[0]);
 				request.Content.Headers.ContentLength = 0;
 			}
 
-			var isGcm = subscription.Endpoint.StartsWith(@"https://android.googleapis.com/gcm/send");
-			var isFcm = subscription.Endpoint.StartsWith(@"https://fcm.googleapis.com/fcm/send/");
+			var isGcm = subscription.Endpoint.StartsWith("https://android.googleapis.com/gcm/send");
+			var isFcm = subscription.Endpoint.StartsWith("https://fcm.googleapis.com/fcm/send/");
 
 			if(isGcm)
 			{
@@ -166,16 +161,16 @@ namespace WebPush
 			} else if(currentVapidDetails != null)
 			{
 				var uri = new Uri(subscription.Endpoint);
-				var audience = uri.Scheme + @"://" + uri.Host;
+				var audience = uri.Scheme + "://" + uri.Host;
 
 				var vapidHeaders = VapidHelper.GetVapidHeaders(audience, currentVapidDetails.Subject,
 					currentVapidDetails.PublicKey, currentVapidDetails.PrivateKey, currentVapidDetails.Expiration);
-				request.Headers.Add(@"Authorization", vapidHeaders["Authorization"]);
+				request.Headers.Add("Authorization", vapidHeaders["Authorization"]);
 
 				if(String.IsNullOrEmpty(cryptoKeyHeader))
 					cryptoKeyHeader = vapidHeaders["Crypto-Key"];
 				else
-					cryptoKeyHeader += @";" + vapidHeaders["Crypto-Key"];
+					cryptoKeyHeader += ";" + vapidHeaders["Crypto-Key"];
 			} else if(isFcm && !String.IsNullOrEmpty(currentGcmApiKey))
 				request.Headers.TryAddWithoutValidation("Authorization", "key=" + currentGcmApiKey);
 
@@ -249,7 +244,7 @@ namespace WebPush
 				return;
 
 			// Error
-			var responseCodeMessage = @"Received unexpected response code: " + (Int32)response.StatusCode;
+			var responseCodeMessage = "Received unexpected response code: " + (Int32)response.StatusCode;
 			switch(response.StatusCode)
 			{
 			case HttpStatusCode.BadRequest:

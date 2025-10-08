@@ -7,13 +7,13 @@ namespace WebPush.Test
 	[TestClass]
 	public class VapidHelperTest
 	{
-		private const String ValidAudience = @"http://example.com";
-		private const String ValidSubject = @"http://example.com/example";
-		private const String ValidSubjectMailto = @"mailto:example@example.com";
+		private const String ValidAudience = "http://example.com";
+		private const String ValidSubject = "http://example.com/example";
+		private const String ValidSubjectMailto = "mailto:example@example.com";
 
-		private const String TestPublicKey = @"BCvKwB2lbVUYMFAaBUygooKheqcEU-GDrVRnu8k33yJCZkNBNqjZj0VdxQ2QIZa4kV5kpX9aAqyBKZHURm6eG1A";
+		private const String TestPublicKey = "BCvKwB2lbVUYMFAaBUygooKheqcEU-GDrVRnu8k33yJCZkNBNqjZj0VdxQ2QIZa4kV5kpX9aAqyBKZHURm6eG1A";
 
-		private const String TestPrivateKey = @"on6X5KmLEFIVvPP3cNX9kE0OF6PV9TJQXVbnKU2xEHI";
+		private const String TestPrivateKey = "on6X5KmLEFIVvPP3cNX9kE0OF6PV9TJQXVbnKU2xEHI";
 
 		[TestMethod]
 		public void TestGenerateVapidKeys()
@@ -22,8 +22,8 @@ namespace WebPush.Test
 			var publicKey = UrlBase64.Decode(keys.PublicKey);
 			var privateKey = UrlBase64.Decode(keys.PrivateKey);
 
-			Assert.AreEqual(32, privateKey.Length);
-			Assert.AreEqual(65, publicKey.Length);
+			Assert.HasCount(32, privateKey);
+			Assert.HasCount(65, publicKey);
 		}
 
 		[TestMethod]
@@ -43,8 +43,8 @@ namespace WebPush.Test
 			var privateKey = TestPrivateKey;
 			var headers = VapidHelper.GetVapidHeaders(ValidAudience, ValidSubject, publicKey, privateKey);
 
-			Assert.IsTrue(headers.ContainsKey(@"Authorization"));
-			Assert.IsTrue(headers.ContainsKey(@"Crypto-Key"));
+			Assert.IsTrue(headers.ContainsKey("Authorization"));
+			Assert.IsTrue(headers.ContainsKey("Crypto-Key"));
 		}
 
 		[TestMethod]
@@ -52,7 +52,7 @@ namespace WebPush.Test
 		{
 			var publicKey = TestPublicKey;
 			var privateKey = TestPrivateKey;
-			Assert.ThrowsException<ArgumentException>(() => VapidHelper.GetVapidHeaders("invalid audience", ValidSubjectMailto, publicKey, privateKey));
+			Assert.Throws<ArgumentException>(() => VapidHelper.GetVapidHeaders("invalid audience", ValidSubjectMailto, publicKey, privateKey));
 		}
 
 		[TestMethod]
@@ -61,7 +61,7 @@ namespace WebPush.Test
 			var publicKey = UrlBase64.Encode(new Byte[65]);
 			var privateKey = UrlBase64.Encode(new Byte[1]);
 
-			Assert.ThrowsException<ArgumentException>(() => VapidHelper.GetVapidHeaders(ValidAudience, ValidSubject, publicKey, privateKey));
+			Assert.Throws<ArgumentException>(() => VapidHelper.GetVapidHeaders(ValidAudience, ValidSubject, publicKey, privateKey));
 		}
 
 		[TestMethod]
@@ -70,7 +70,7 @@ namespace WebPush.Test
 			var publicKey = UrlBase64.Encode(new Byte[1]);
 			var privateKey = UrlBase64.Encode(new Byte[32]);
 
-			Assert.ThrowsException<ArgumentException>(() => VapidHelper.GetVapidHeaders(ValidAudience, ValidSubject, publicKey, privateKey));
+			Assert.Throws<ArgumentException>(() => VapidHelper.GetVapidHeaders(ValidAudience, ValidSubject, publicKey, privateKey));
 		}
 
 		[TestMethod]
@@ -79,7 +79,7 @@ namespace WebPush.Test
 			var publicKey = TestPublicKey;
 			var privateKey = TestPrivateKey;
 
-			Assert.ThrowsException<ArgumentException>(() => VapidHelper.GetVapidHeaders(ValidAudience, @"invalid subject", publicKey, privateKey));
+			Assert.Throws<ArgumentException>(() => VapidHelper.GetVapidHeaders(ValidAudience, "invalid subject", publicKey, privateKey));
 		}
 
 		[TestMethod]
@@ -89,8 +89,8 @@ namespace WebPush.Test
 			var privateKey = TestPrivateKey;
 			var headers = VapidHelper.GetVapidHeaders(ValidAudience, ValidSubjectMailto, publicKey, privateKey);
 
-			Assert.IsTrue(headers.ContainsKey(@"Authorization"));
-			Assert.IsTrue(headers.ContainsKey(@"Crypto-Key"));
+			Assert.IsTrue(headers.ContainsKey("Authorization"));
+			Assert.IsTrue(headers.ContainsKey("Crypto-Key"));
 		}
 
 		[TestMethod]
@@ -99,7 +99,7 @@ namespace WebPush.Test
 			var publicKey = TestPublicKey;
 			var privateKey = TestPrivateKey;
 
-			Assert.ThrowsException<ArgumentException>(() => VapidHelper.GetVapidHeaders(ValidAudience, ValidSubjectMailto, publicKey, privateKey, 1552715607));
+			Assert.Throws<ArgumentException>(() => VapidHelper.GetVapidHeaders(ValidAudience, ValidSubjectMailto, publicKey, privateKey, 1552715607));
 		}
 	}
 }

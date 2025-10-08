@@ -9,7 +9,7 @@ namespace WebPush.Test
 	[TestClass]
 	public class JWSSignerTest
 	{
-		private const String TestPrivateKey = @"on6X5KmLEFIVvPP3cNX9kE0OF6PV9TJQXVbnKU2xEHI";
+		private const String TestPrivateKey = "on6X5KmLEFIVvPP3cNX9kE0OF6PV9TJQXVbnKU2xEHI";
 
 		[TestMethod]
 		public void TestGenerateSignature()
@@ -17,21 +17,25 @@ namespace WebPush.Test
 			var decodedPrivateKey = UrlBase64.Decode(TestPrivateKey);
 			var privateKey = ECKeyHelper.GetPrivateKey(decodedPrivateKey);
 
-			var header = new Dictionary<string, object>();
-			header.Add("typ", "JWT");
-			header.Add("alg", "ES256");
+			var header = new Dictionary<String, Object>
+			{
+				{ "typ", "JWT" },
+				{ "alg", "ES256" }
+			};
 
-			var jwtPayload = new Dictionary<string, object>();
-			jwtPayload.Add("aud", "aud");
-			jwtPayload.Add("exp", 1);
-			jwtPayload.Add("sub", "subject");
+			var jwtPayload = new Dictionary<String, Object>
+			{
+				{ "aud", "aud" },
+				{ "exp", 1 },
+				{ "sub", "subject" }
+			};
 
 			var signer = new JwsSigner(privateKey);
 			var token = signer.GenerateSignature(header, jwtPayload);
 
 			var tokenParts = token.Split('.');
 
-			Assert.AreEqual(3, tokenParts.Length);
+			Assert.HasCount(3, tokenParts);
 
 			var encodedHeader = tokenParts[0];
 			var encodedPayload = tokenParts[1];
@@ -47,7 +51,7 @@ namespace WebPush.Test
 			var decodedSignatureLength = decodedSignature.Length;
 
 			var isSignatureLengthValid = decodedSignatureLength == 66 || decodedSignatureLength == 64;
-			Assert.AreEqual(true, isSignatureLengthValid);
+			Assert.IsTrue(isSignatureLengthValid);
 		}
 	}
 }

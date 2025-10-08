@@ -12,15 +12,15 @@ namespace WebPush.Test
 	[TestClass]
 	public class WebPushClientTest
 	{
-		private const String TestPublicKey = @"BCvKwB2lbVUYMFAaBUygooKheqcEU-GDrVRnu8k33yJCZkNBNqjZj0VdxQ2QIZa4kV5kpX9aAqyBKZHURm6eG1A";
+		private const String TestPublicKey = "BCvKwB2lbVUYMFAaBUygooKheqcEU-GDrVRnu8k33yJCZkNBNqjZj0VdxQ2QIZa4kV5kpX9aAqyBKZHURm6eG1A";
 
-		private const String TestPrivateKey = @"on6X5KmLEFIVvPP3cNX9kE0OF6PV9TJQXVbnKU2xEHI";
+		private const String TestPrivateKey = "on6X5KmLEFIVvPP3cNX9kE0OF6PV9TJQXVbnKU2xEHI";
 
-		private const String TestGcmEndpoint = @"https://android.googleapis.com/gcm/send/";
+		private const String TestGcmEndpoint = "https://android.googleapis.com/gcm/send/";
 
-		private const String TestFcmEndpoint = @"https://fcm.googleapis.com/fcm/send/efz_TLX_rLU:APA91bE6U0iybLYvv0F3mf6";
+		private const String TestFcmEndpoint = "https://fcm.googleapis.com/fcm/send/efz_TLX_rLU:APA91bE6U0iybLYvv0F3mf6";
 
-		private const String TestFirefoxEndpoint = @"https://updates.push.services.mozilla.com/wpush/v2/gBABAABgOe_sGrdrsT35ljtA4O9xCX";
+		private const String TestFirefoxEndpoint = "https://updates.push.services.mozilla.com/wpush/v2/gBABAABgOe_sGrdrsT35ljtA4O9xCX";
 
 		public const String TestSubject = "mailto:example@example.com";
 
@@ -37,62 +37,66 @@ namespace WebPush.Test
 		[TestMethod]
 		public void TestGcmApiKeyInOptions()
 		{
-			var gcmAPIKey = @"teststring";
+			var gcmAPIKey = "teststring";
 			var subscription = new PushSubscription(TestGcmEndpoint, TestPublicKey, TestPrivateKey);
 
-			var options = new Dictionary<String, Object>();
-			options[@"gcmAPIKey"] = gcmAPIKey;
-			var message = client.GenerateRequestDetails(subscription, @"test payload", options);
-			var authorizationHeader = message.Headers.GetValues(@"Authorization").First();
+			var options = new Dictionary<String, Object>
+			{
+				["gcmAPIKey"] = gcmAPIKey
+			};
+			var message = client.GenerateRequestDetails(subscription, "test payload", options);
+			var authorizationHeader = message.Headers.GetValues("Authorization").First();
 
 			Assert.AreEqual("key=" + gcmAPIKey, authorizationHeader);
 
 			// Test previous incorrect casing of gcmAPIKey
-			var options2 = new Dictionary<String, Object>();
-			options2[@"gcmApiKey"] = gcmAPIKey;
-			Assert.ThrowsException<ArgumentException>(() => client.GenerateRequestDetails(subscription, "test payload", options2));
+			var options2 = new Dictionary<String, Object>
+			{
+				["gcmApiKey"] = gcmAPIKey
+			};
+			Assert.Throws<ArgumentException>(() => client.GenerateRequestDetails(subscription, "test payload", options2));
 		}
 
 		[TestMethod]
 		public void TestSetGcmApiKey()
 		{
-			var gcmAPIKey = @"teststring";
+			var gcmAPIKey = "teststring";
 			client.SetGcmApiKey(gcmAPIKey);
 			var subscription = new PushSubscription(TestGcmEndpoint, TestPublicKey, TestPrivateKey);
-			var message = client.GenerateRequestDetails(subscription, @"test payload");
-			var authorizationHeader = message.Headers.GetValues(@"Authorization").First();
+			var message = client.GenerateRequestDetails(subscription, "test payload");
+			var authorizationHeader = message.Headers.GetValues("Authorization").First();
 
-			Assert.AreEqual(@"key=" + gcmAPIKey, authorizationHeader);
+			Assert.AreEqual("key=" + gcmAPIKey, authorizationHeader);
 		}
 
 		[TestMethod]
 		public void TestSetGCMAPIKeyEmptyString()
 		{
-			Assert.ThrowsException<ArgumentException>(() => client.SetGcmApiKey(String.Empty));
+			Assert.Throws<ArgumentException>(() => client.SetGcmApiKey(String.Empty));
 		}
 
 		[TestMethod]
 		public void TestSetGcmApiKeyNonGcmPushService()
 		{
 			// Ensure that the API key doesn't get added on a service that doesn't accept it.
-			var gcmAPIKey = @"teststring";
+			var gcmAPIKey = "teststring";
 			client.SetGcmApiKey(gcmAPIKey);
 			var subscription = new PushSubscription(TestFirefoxEndpoint, TestPublicKey, TestPrivateKey);
-			var message = client.GenerateRequestDetails(subscription, @"test payload");
+			var message = client.GenerateRequestDetails(subscription, "test payload");
 
-			Assert.IsFalse(message.Headers.TryGetValues(@"Authorization", out var values));
+			Assert.IsFalse(message.Headers.TryGetValues("Authorization", out var _));
 		}
 
 		[TestMethod]
 		public void TestSetGcmApiKeyNull()
 		{
-			client.SetGcmApiKey(@"somestring");
+			client.SetGcmApiKey("somestring");
 			client.SetGcmApiKey(null);
 
 			var subscription = new PushSubscription(TestGcmEndpoint, TestPublicKey, TestPrivateKey);
-			var message = client.GenerateRequestDetails(subscription, @"test payload");
+			var message = client.GenerateRequestDetails(subscription, "test payload");
 
-			Assert.IsFalse(message.Headers.TryGetValues("Authorization", out var values));
+			Assert.IsFalse(message.Headers.TryGetValues("Authorization", out var _));
 		}
 
 		[TestMethod]
@@ -101,23 +105,23 @@ namespace WebPush.Test
 			client.SetVapidDetails(TestSubject, TestPublicKey, TestPrivateKey);
 
 			var subscription = new PushSubscription(TestFirefoxEndpoint, TestPublicKey, TestPrivateKey);
-			var message = client.GenerateRequestDetails(subscription, @"test payload");
-			var authorizationHeader = message.Headers.GetValues(@"Authorization").First();
-			var cryptoHeader = message.Headers.GetValues(@"Crypto-Key").First();
+			var message = client.GenerateRequestDetails(subscription, "test payload");
+			var authorizationHeader = message.Headers.GetValues("Authorization").First();
+			var cryptoHeader = message.Headers.GetValues("Crypto-Key").First();
 
-			Assert.IsTrue(authorizationHeader.StartsWith(@"WebPush "));
-			Assert.IsTrue(cryptoHeader.Contains(@"p256ecdsa"));
+			Assert.StartsWith("WebPush ", authorizationHeader);
+			Assert.Contains("p256ecdsa", cryptoHeader);
 		}
 
 		[TestMethod]
 		public void TestFcmAddsAuthorizationHeader()
 		{
-			client.SetGcmApiKey(@"somestring");
+			client.SetGcmApiKey("somestring");
 			var subscription = new PushSubscription(TestFcmEndpoint, TestPublicKey, TestPrivateKey);
-			var message = client.GenerateRequestDetails(subscription, @"test payload");
-			var authorizationHeader = message.Headers.GetValues(@"Authorization").First();
+			var message = client.GenerateRequestDetails(subscription, "test payload");
+			var authorizationHeader = message.Headers.GetValues("Authorization").First();
 
-			Assert.IsTrue(authorizationHeader.StartsWith(@"key="));
+			Assert.StartsWith("key=", authorizationHeader);
 		}
 
 		[TestMethod]
@@ -135,7 +139,7 @@ namespace WebPush.Test
 		[DataRow(HttpStatusCode.InternalServerError, "Received unexpected response code: 500")]
 		public void TestHandlingFailureHttpCodes(HttpStatusCode status, String expectedMessage)
 		{
-			var actual = Assert.ThrowsException<WebPushException>(() => TestSendNotification(status));
+			var actual = Assert.Throws<WebPushException>(() => this.TestSendNotification(status));
 			Assert.AreEqual(expectedMessage, actual.Message);
 		}
 
@@ -148,7 +152,7 @@ namespace WebPush.Test
 		[DataRow(HttpStatusCode.InternalServerError, "internal error", "Received unexpected response code: 500. Details: internal error")]
 		public void TestHandlingFailureMessages(HttpStatusCode status, String response, String expectedMessage)
 		{
-			var actual = Assert.ThrowsException<WebPushException>(() => this.TestSendNotification(status, response));
+			var actual = Assert.Throws<WebPushException>(() => this.TestSendNotification(status, response));
 			Assert.AreEqual(expectedMessage, actual.Message);
 		}
 
@@ -161,7 +165,7 @@ namespace WebPush.Test
 		{
 			var invalidKey = TestPublicKey.Substring(0, TestPublicKey.Length - charactersToDrop);
 
-			Assert.ThrowsException<InvalidEncryptionDetailsException>(() => this.TestSendNotification(HttpStatusCode.OK, response: null, invalidKey));
+			Assert.Throws<InvalidEncryptionDetailsException>(() => this.TestSendNotification(HttpStatusCode.OK, response: null, invalidKey));
 		}
 
 		private void TestSendNotification(HttpStatusCode status, String response = null, String publicKey = TestPublicKey)
