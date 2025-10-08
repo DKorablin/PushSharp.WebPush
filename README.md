@@ -1,13 +1,9 @@
 <h1 align="center">PushSharp.WebPush</h1>
 
-<p align="center">
-  <a href="https://github.com/DKorablin/PushSharp.WebPush/actions/workflows/release.yml">
-    <img src="https://github.com/DKorablin/PushSharp.WebPush/actions/workflows/release.yml/badge.svg" alt="CI Build" />	
-  </a>
-  <a href="https://www.nuget.org/packages/AlphaOmega.PushSharp.WebPush/">
-    <img src="https://buildstats.info/nuget/AlphaOmega.PushSharp.WebPush" alt="Nuget Package Details" />
-  </a>
-</p>
+# PushSharp.WebPush
+
+[![Auto build](https://github.com/DKorablin/PushSharp.WebPush/actions/workflows/release.yml/badge.svg)](https://github.com/DKorablin/PushSharp.WebPush/releases/latest)
+[![Nuget](https://img.shields.io/nuget/v/AlphaOmega.PushSharp.WebPush)](https://img.shields.io/nuget/v/AlphaOmega.PushSharp.WebPush)
 
 # What's new
 1. Updated packages
@@ -195,119 +191,10 @@ The `GetVapidHeaders()` method expects the following input:
 
 ### Returns
 
-This method returns a Dictionary<string, string> intented to be headers of a web request. It will contain the following keys:
+This method returns a Dictionary<string, string> intended to be headers of a web request. It will contain the following keys:
 
 - *Authorization*
 - *Crypto-Key*.
-
-<hr />
-
-# Browser Support
-
-<table>
-<thead>
-<tr>
-	<th><strong>Browser</strong></th>
-    <th width="130px"><strong>Push without Payload</strong></th>
-    <th width="130px"><strong>Push with Payload</strong></th>
-    <th width="130px"><strong>VAPID</strong></th>
-    <th><strong>Notes</strong></th>
-</tr>
-</thead>
-<tbody>
-<tr>
-	<td>Chrome</td>
-	<!-- Push without payloads support-->
-   <td>✓ v42+</td>
-   <!-- Push with payload support -->
-   <td>✓ v50+</td>
-   <!-- VAPID Support -->
-   <td>✓ v52+</td>
-   <td>In v51 and less, the `gcm_sender_id` is needed to get a push subscription.</td>
-   </tr>
-
-   <tr>
-   <td>Firefox</td>
-
-   <!-- Push without payloads support-->
-   <td>✓ v44+</td>
-
-   <!-- Push with payload support -->
-   <td>✓ v44+</td>
-
-   <!-- VAPID Support -->
-   <td>✓ v46+</td>
-
-   <td></td>
-   </tr>
-
-   <tr>
-   <td>Opera</td>
-
-   <!-- Push without payloads support-->
-   <td>✓ v39+ Android <strong>*</strong>
-       <br/>
-       <br/>
-       ✓ v42+ Desktop
-</td>
-   <!-- Push with payload support -->
-   <td>✓ v39+ Android <strong>*</strong>
-       <br/>
-       <br/>
-       ✓ v42+ Desktop
-</td>
-
-   <!-- VAPID Support -->
-   <td>✓ v42+ Desktop</td>
-
-   <td>
-   <strong>*</strong> The `gcm_sender_id` is needed to get a push subscription.
-   </td>
-   </tr>
-
-   <tr>
-   <td>Edge</td>
-
-   <!-- Push without payloads support-->
-   <td>✓ v17+</td>
-
-   <!-- Push with payload support -->
-   <td>✓ v17+</td>
-
-   <!-- VAPID Support -->
-   <td>✓ v17+</td>
-
-   <td></td>
-   </tr>
-   <tr>
-   <td>Safari</td>
-
-   <!-- Push without payloads support-->
-   <td>✗</td>
-
-   <!-- Push with payload support -->
-   <td>✗</td>
-
-   <!-- VAPID Support -->
-   <td>✗</td>
-
-   <td></td>
-   </tr>
-
-   <tr>
-   <td>Samsung Internet Browser</td>
-   <!-- Push without payloads support-->
-   <td>✓ v4.0.10-53+</td>
-   <!-- Push with payload support -->
-   <td>✗</td>
-
-   <!-- VAPID Support -->
-   <td>✗</td>
-
-   <td>The `gcm_sender_id` is needed to get a push subscription.</td>
-   </tr>
-  </tbody>
-</table>
 
 # Help
 
@@ -318,3 +205,4 @@ The [Service Worker Cookbook](https://serviceworke.rs/) is full of Web Push exam
 # Credits
 - Ported from https://github.com/web-push-libs/web-push.
 - Original Encryption code from https://github.com/LogicSoftware/WebPushEncryption
+- Original WebPush authors: https://github.com/web-push-libs/web-push-csharp
