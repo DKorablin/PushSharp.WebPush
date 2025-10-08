@@ -23,6 +23,9 @@
 				<_Parameter1>false</_Parameter1>
 				<_Parameter1_TypeName>System.Boolean</_Parameter1_TypeName>
 			</AssemblyAttributes>
+			<AssemblyAttributes Include="System.Runtime.InteropServices.Guid">
+				<_Parameter1>e0e6f2d6-2b1b-4f7c-8a4e-6d5f8c9f1a2b</_Parameter1>
+			</AssemblyAttributes>
 		</ItemGroup>
 		<ItemGroup Condition="'$(Configuration)' == 'Release'">
 			<AssemblyAttributes Include="System.Runtime.CompilerServices.InternalsVisibleTo">

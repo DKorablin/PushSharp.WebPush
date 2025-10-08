@@ -63,7 +63,7 @@ jobs:
         echo $multiLineString >> $env:GITHUB_OUTPUT
         echo "EOF" >> $env:GITHUB_OUTPUT
       shell: pwsh
-    - name: Signing PushSharp Assemblies
+    - name: Signing portable executables
       uses: dlemstra/code-sign-action@v1
       with:
         certificate: '${{ secrets.SIGN_PE_CERTIFICATE }}'
@@ -73,74 +73,26 @@ jobs:
     - name: Creating NuGet package
       run: |
         dotnet pack ${{ env.SolutionName }}.sln --no-build --no-restore -o ${{github.workspace}}\bin\nupkg /p:PackageVersion=${{ needs.version.outputs.new_version }} /p:IncludeSymbols=true /p:SymbolPackageFormat=snupkg
-    - name: Upload build artifacts
-      uses: actions/upload-artifact@v4
-      with:
-        name: ${{ env.SolutionName }}_Binaries
-        path: ${{github.workspace}}\bin\Release\*
-        if-no-files-found: error
-        compression-level: 0
-        retention-days: 1
-
-  deploy_release:
-    name: Deploying release
-    needs: [version, build_net]
-    if: needs.build_net.result == 'success'
-    runs-on: ubuntu-latest
-    permissions:
-      contents: write
-      actions: write
-    steps:
-    - name: Download artifacts
-      uses: actions/download-artifact@v4
-      with:
-        path: bin
+    - name: Deploying package to GitHub
+      run: dotnet nuget push ${{github.workspace}}\bin\*.nupkg --skip-duplicate --api-key ${{secrets.GITHUB_TOKEN}} --source https://nuget.pkg.github.com/DKorablin/index.json
+#    - name: Deploying package to NuGet
+#      run: dotnet nuget push nupkg\*.nupkg --skip-duplicate --api-key ${{secrets.NUGET_TOKEN}} --source https://api.nuget.org/v3/index.json
     - name: Zipping artifacts
       run: |
-        cd ${{github.workspace}}/bin/${{ env.SolutionName }}_Binaries
+        cd ${{ github.workspace }}\bin\Release
         for dir in */; do
           dir_name="${dir%/}"
-          (cd "$dir_name" && zip -qq -r "../${{env.SolutionName}}_v${{needs.version.outputs.new_version}}_${dir_name}.zip" .)
+          (cd "$dir_name" && zip -qq -r "..\${{env.SolutionName}}_v${{needs.version.outputs.new_version}}_${dir_name}.zip" .)
         done
     - name: Publish GitHub Release
       uses: ncipollo/release-action@v1
       with:
-        artifacts: ${{github.workspace}}/bin/${{ env.SolutionName }}_Binaries/*.zip
+        artifacts: ${{github.workspace}}\bin\*.zip
         tag: ${{ needs.version.outputs.new_tag }}
         name: Auto ${{ needs.version.outputs.new_tag }}
         body: ${{ needs.version.outputs.changelog }}
         artifactErrorsFailBuild: true
         generateReleaseNotes: true
-
-  deploy_nuget:
-    name: Deploying NuGet package
-    needs: [version, build_net]
-    runs-on: windows-latest
-    steps:
-    - name: Checkout nessesary files from repository
-      uses: actions/checkout@v4
-      with:
-        sparse-checkout: |
-          README.md
-          Resources/PushSharp-Icon-NuGet-Small.png
-          ${{env.SolutionName}}.nuspec
-        sparse-checkout-cone-mode: false
-    - name: Download artifacts
-      uses: actions/download-artifact@v4
-      with:
-        path: bin
-#    - name: Enumerate bin files
-#      run: |
-#        Write-Host "Listing all files under bin recursively:";
-#        $files = Get-ChildItem -Path "$env:GITHUB_WORKSPACE\bin" -Recurse -File;
-#        foreach ($f in $files) { Write-Host $f.FullName }
-#        Write-Host "Total file count: $($files.Count)"
-#    - name: Packing artifacts
-#      run: nuget pack ${{env.SolutionName}}.nuspec -Version ${{needs.version.outputs.new_version}} -OutputDirectory nupkg
-#    - name: Deploying to GitHub
-#      run: dotnet nuget push nupkg\*.nupkg --skip-duplicate --api-key ${{secrets.GITHUB_TOKEN}} --source https://nuget.pkg.github.com/DKorablin/index.json
-#    - name: Deploying to NuGet
-#      run: dotnet nuget push nupkg\*.nupkg --skip-duplicate --api-key ${{secrets.NUGET_TOKEN}} --source https://api.nuget.org/v3/index.json
 
   failure_cleanup:
     name: Cleanup Tag On Failure
