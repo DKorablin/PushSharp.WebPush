@@ -18,6 +18,10 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+		<None Include="docs\README.md" Pack="true" PackagePath="\"/>
+	</ItemGroup>
+
+	<ItemGroup>
 		<PackageReference Include="Portable.BouncyCastle" />
 		<PackageReference Include="Microsoft.SourceLink.GitHub" />
 		<PackageReference Include="SonarAnalyzer.CSharp" />
