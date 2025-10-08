@@ -82,6 +82,7 @@ jobs:
         $basePath = "${{ github.workspace }}\bin\Release"
         Get-ChildItem -Path $basePath -Directory | ForEach-Object {
           $dirName = $_.Name
+          echo "Creating archive for $dirName"
           $archiveName = "${{env.SolutionName}}_v${{needs.version.outputs.new_version}}_${dirName}.zip"
           $destinationPath = Join-Path -Path $basePath -ChildPath $archiveName
           Compress-Archive -Path "$($_.FullName)\*" -DestinationPath $destinationPath -Force
