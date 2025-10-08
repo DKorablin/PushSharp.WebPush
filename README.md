@@ -9,6 +9,11 @@
   </a>
 </p>
 
+# What's new
+1. Updated packages
+2. Added assembly signature
+3. Added PE signature
+
 # Why
 
 Web push requires that push messages triggered from a backend be done via the
