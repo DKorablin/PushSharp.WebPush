@@ -1,20 +1,21 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFrameworks>net462;net471;net48;netcoreapp3.1;net5.0;net6.0;net7.0;net8.0</TargetFrameworks>
-    <IsPackable>false</IsPackable>
-  </PropertyGroup>
+	<PropertyGroup>
+		<TargetFrameworks>net48;netstandard2.0</TargetFrameworks>
+		<GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+		<IsPackable>false</IsPackable>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.5.0" />
-    <PackageReference Include="Moq" Version="4.10.1" />
-    <PackageReference Include="MSTest.TestAdapter" Version="1.2.0" />
-    <PackageReference Include="MSTest.TestFramework" Version="1.2.0" />
-    <PackageReference Include="RichardSzalay.MockHttp" Version="5.0.0" />
-  </ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="Microsoft.NET.Test.Sdk" />
+		<PackageReference Include="Moq" />
+		<PackageReference Include="MSTest.TestAdapter" Condition="'$(TargetFramework)' == 'net48'" />
+		<PackageReference Include="MSTest.TestFramework" />
+		<PackageReference Include="RichardSzalay.MockHttp" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\WebPush\WebPush.csproj" />
-  </ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\PushSharp.WebPush\PushSharp.WebPush.csproj" />
+	</ItemGroup>
 
 </Project>

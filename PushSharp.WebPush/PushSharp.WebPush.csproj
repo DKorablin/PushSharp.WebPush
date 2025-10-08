@@ -1,0 +1,29 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFrameworks>net48;netstandard2.0</TargetFrameworks>
+		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+		<GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+		<PackageId>AlphaOmega.PushSharp.WebPush</PackageId>
+		<Version>$(Version)</Version>
+		<Authors>Cory Thompson, Danila Korablin</Authors>
+		<Company />
+		<Product />
+		<Description>Web Push library for C#</Description>
+		<PackageLicenseUrl>https://github.com/web-push-libs/web-push-csharp/blob/master/LICENSE</PackageLicenseUrl>
+		<RepositoryUrl>https://github.com/DKorablin/PushSharp.WebPush</RepositoryUrl>
+		<PackageTags>web push notifications vapid</PackageTags>
+		<PublishRepositoryUrl>true</PublishRepositoryUrl>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Portable.BouncyCastle" />
+		<PackageReference Include="Microsoft.SourceLink.GitHub" />
+		<PackageReference Include="SonarAnalyzer.CSharp" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<Reference Include="System.Net.Http" Condition="'$(TargetFramework)' == 'net48'" />
+		<PackageReference Include="System.Text.Json" Condition="'$(TargetFramework)' == 'net48' OR '$(TargetFramework)' == 'netstandard2.0'"/>
+	</ItemGroup>
+</Project>
