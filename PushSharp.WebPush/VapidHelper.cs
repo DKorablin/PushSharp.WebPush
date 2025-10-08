@@ -65,9 +65,7 @@ namespace WebPush
 			return results;
 		}
 
-		/// <summary>
-		/// Validates the audience (origin) of the push service.
-		/// </summary>
+		/// <summary>Validates the audience (origin) of the push service.</summary>
 		/// <param name="audience">The audience value to validate.</param>
 		/// <exception cref="ArgumentException">Thrown when audience is missing or invalid.</exception>
 		public static void ValidateAudience(String audience)
@@ -82,9 +80,7 @@ namespace WebPush
 				throw new ArgumentException(@"VAPID audience is not a url.");
 		}
 
-		/// <summary>
-		/// Validates the contact subject (URL or mailto) used in the VAPID claims.
-		/// </summary>
+		/// <summary>Validates the contact subject (URL or mailto) used in the VAPID claims.</summary>
 		/// <param name="subject">The subject to validate.</param>
 		/// <exception cref="ArgumentException">Thrown when the subject is missing or invalid.</exception>
 		public static void ValidateSubject(String subject)
@@ -99,9 +95,7 @@ namespace WebPush
 				throw new ArgumentException(@"Subject is not a valid URL or mailto: address", nameof(subject));
 		}
 
-		/// <summary>
-		/// Validates a URL-safe Base64 encoded uncompressed P-256 public key (65 bytes decoded).
-		/// </summary>
+		/// <summary>Validates a URL-safe Base64 encoded uncompressed P-256 public key (65 bytes decoded).</summary>
 		/// <param name="publicKey">The public key to validate.</param>
 		/// <exception cref="ArgumentException">Thrown when the key is missing or of incorrect length.</exception>
 		public static void ValidatePublicKey(String publicKey)
@@ -115,9 +109,7 @@ namespace WebPush
 				throw new ArgumentException(@"Vapid public key must be 65 characters long when decoded", nameof(publicKey));
 		}
 
-		/// <summary>
-		/// Validates a URL-safe Base64 encoded P-256 private key (32 bytes decoded).
-		/// </summary>
+		/// <summary>Validates a URL-safe Base64 encoded P-256 private key (32 bytes decoded).</summary>
 		/// <param name="privateKey">The private key to validate.</param>
 		/// <exception cref="ArgumentException">Thrown when the key is missing or invalid.</exception>
 		public static void ValidatePrivateKey(String privateKey)

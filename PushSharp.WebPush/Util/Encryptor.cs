@@ -124,21 +124,27 @@ namespace WebPush.Util
 		}
 	}
 
+	/// <summary>Provides a lightweight wrapper around BouncyCastle HMAC-SHA256 for computing keyed hashes.</summary>
 	public class HmacSha256
 	{
 		private readonly HMac _hmac;
 
+		/// <summary>Creates a new HmacSha256 with the specified key.</summary>
+		/// <param name="key">The secret key used for the HMAC operation.</param>
 		public HmacSha256(Byte[] key)
 		{
 			this._hmac = new HMac(new Sha256Digest());
 			this._hmac.Init(new KeyParameter(key));
 		}
 
+		/// <summary>Computes the HMAC-SHA256 hash for the supplied data.</summary>
+		/// <param name="value">The data to hash.</param>
+		/// <returns>The computed HMAC.</returns>
 		public Byte[] ComputeHash(Byte[] value)
 		{
 			var resBuf = new Byte[_hmac.GetMacSize()];
-			_hmac.BlockUpdate(value, 0, value.Length);
-			_hmac.DoFinal(resBuf, 0);
+			this._hmac.BlockUpdate(value, 0, value.Length);
+			this._hmac.DoFinal(resBuf, 0);
 
 			return resBuf;
 		}
