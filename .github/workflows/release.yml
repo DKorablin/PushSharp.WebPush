@@ -36,7 +36,7 @@ jobs:
     - uses: actions/checkout@v4
  
     - name: Setup .NET SDK
-      uses: actions/setup-dotnet@v4.0.0
+      uses: actions/setup-dotnet@v4
       with:
         dotnet-version: 8.0.x
     - name: Caching NuGet packages
@@ -81,7 +81,9 @@ jobs:
     - name: Deploying package to GitHub
       run: dotnet nuget push ${{github.workspace}}\bin\nupkg\ --skip-duplicate --api-key ${{secrets.GITHUB_TOKEN}} --source https://nuget.pkg.github.com/DKorablin/index.json
     - name: Deploying package to NuGet
-      run: dotnet nuget push ${{github.workspace}}\bin\nupkg\ --skip-duplicate --api-key ${{secrets.NUGET_TOKEN}} --source https://api.nuget.org/v3/index.json
+      run: dotnet nuget push ${{github.workspace}}\bin\nupkg\*.nupkg --skip-duplicate --api-key ${{secrets.NUGET_TOKEN}} --source https://api.nuget.org/v3/index.json
+    - name: Deploying SourceLink package to NuGet
+      run: dotnet nuget push ${{github.workspace}}\bin\nupkg\*.snupkg --skip-duplicate --api-key ${{secrets.NUGET_TOKEN}} --source https://api.nuget.org/v3/index.json
     - name: Zipping artifacts
       run: |
         $basePath = "${{ github.workspace }}\bin\Release"
