@@ -79,11 +79,14 @@ jobs:
 #      run: dotnet nuget push ${{github.workspace}}\bin\nupkg\*.nupkg --skip-duplicate --api-key ${{secrets.NUGET_TOKEN}} --source https://api.nuget.org/v3/index.json
     - name: Zipping artifacts
       run: |
-        cd ${{ github.workspace }}\bin\Release
-        for dir in */; do
-          dir_name="${dir%/}"
-          (cd "$dir_name" && zip -qq -r "..\${{env.SolutionName}}_v${{needs.version.outputs.new_version}}_${dir_name}.zip" .)
-        done
+        $basePath = "${{ github.workspace }}\bin\Release"
+        Get-ChildItem -Path $basePath -Directory | ForEach-Object {
+          $dirName = $_.Name
+          $archiveName = "${{env.SolutionName}}_v${{needs.version.outputs.new_version}}_${dirName}.zip"
+          $destinationPath = Join-Path -Path $basePath -ChildPath $archiveName
+          Compress-Archive -Path "$($_.FullName)\*" -DestinationPath $destinationPath -Force
+        }
+      shell: pwsh
     - name: Publish GitHub Release
       uses: ncipollo/release-action@v1
       with:
