@@ -6,7 +6,12 @@
 		<IsPackable>false</IsPackable>
 		<Configuration>Debug</Configuration>
 		<GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+		<Parallelize>true</Parallelize>
 	</PropertyGroup>
+
+	<ItemGroup>
+		<AssemblyAttributes Include="Microsoft.VisualStudio.TestTools.UnitTesting.Parallelize" />
+	</ItemGroup>
 
 	<ItemGroup>
 		<PackageReference Include="Microsoft.NET.Test.Sdk" />
