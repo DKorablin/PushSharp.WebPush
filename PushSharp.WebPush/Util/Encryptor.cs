@@ -79,7 +79,7 @@ namespace WebPush.Util
 			var len = cipher.ProcessBytes(message, 0, message.Length, cipherText, 0);
 			cipher.DoFinal(cipherText, len);
 
-			//byte[] tag = cipher.GetMac();
+			// byte[] tag = cipher.GetMac()
 			return cipherText;
 		}
 
