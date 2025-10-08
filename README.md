@@ -1,11 +1,11 @@
-<h1 align="center">web-push-csharp</h1>
+<h1 align="center">PushSharp.WebPush</h1>
 
 <p align="center">
-  <a href="https://github.com/web-push-libs/web-push-csharp/actions/workflows/CI.yml">
-    <img src="https://github.com/web-push-libs/web-push-csharp/actions/workflows/CI.yml/badge.svg" alt="CI Build" />	
+  <a href="https://github.com/DKorablin/PushSharp.WebPush/actions/workflows/release.yml">
+    <img src="https://github.com/DKorablin/PushSharp.WebPush/actions/workflows/release.yml/badge.svg" alt="CI Build" />	
   </a>
-  <a href="https://www.nuget.org/packages/WebPush/">
-    <img src="https://buildstats.info/nuget/WebPush" alt="Nuget Package Details" />
+  <a href="https://www.nuget.org/packages/AlphaOmega.PushSharp.WebPush/">
+    <img src="https://buildstats.info/nuget/AlphaOmega.PushSharp.WebPush" alt="Nuget Package Details" />
   </a>
 </p>
 
@@ -23,7 +23,7 @@ for browsers relying on GCM for message sending / delivery.
 
 Installation is simple, just install via NuGet.
 
-    Install-Package WebPush
+    Install-Package AlphaOmega.PushSharp.WebPush
 
 # Demo Project
 
@@ -308,8 +308,7 @@ This method returns a Dictionary<string, string> intented to be headers of a web
 
 **Service Worker Cookbook**
 
-The [Service Worker Cookbook](https://serviceworke.rs/) is full of Web Push
-examples.
+The [Service Worker Cookbook](https://serviceworke.rs/) is full of Web Push examples.
 
 # Credits
 - Ported from https://github.com/web-push-libs/web-push.
