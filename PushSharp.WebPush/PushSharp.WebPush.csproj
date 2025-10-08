@@ -10,14 +10,15 @@
 		<Product />
 		<PackageId>AlphaOmega.PushSharp.WebPush</PackageId>
 		<Description>Web Push library for C#</Description>
-		<PackageLicenseUrl>https://github.com/web-push-libs/web-push-csharp/blob/master/LICENSE</PackageLicenseUrl>
 		<RepositoryUrl>https://github.com/DKorablin/PushSharp.WebPush</RepositoryUrl>
 		<PackageTags>web push notifications vapid</PackageTags>
 		<PackageReadmeFile>README.md</PackageReadmeFile>
+		<PackageLicenseFile>LICENSE.md</PackageLicenseFile>
 	</PropertyGroup>
 
 	<ItemGroup>
 		<None Include="..\README.md" Pack="true" PackagePath="\"/>
+		<None Include="..\LICENSE.md" Pack="true" PackagePath="\"/>
 	</ItemGroup>
 
 	<ItemGroup>
