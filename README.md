@@ -4,9 +4,10 @@
 [![Nuget](https://img.shields.io/nuget/v/AlphaOmega.PushSharp.WebPush)](https://img.shields.io/nuget/v/AlphaOmega.PushSharp.WebPush)
 
 ## What's new
-1. Updated packages
+1. Updated NuGet packages to the latest versions
 2. Added assembly signature
 3. Added PE signature
+4. Limited number of builds: .NET 4.8 and .NET Standard 2.0 only (I will gladly return the rest if needed.)
 
 ## Why
 
