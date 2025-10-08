@@ -1,16 +1,14 @@
-<h1 align="center">PushSharp.WebPush</h1>
-
 # PushSharp.WebPush
 
 [![Auto build](https://github.com/DKorablin/PushSharp.WebPush/actions/workflows/release.yml/badge.svg)](https://github.com/DKorablin/PushSharp.WebPush/releases/latest)
 [![Nuget](https://img.shields.io/nuget/v/AlphaOmega.PushSharp.WebPush)](https://img.shields.io/nuget/v/AlphaOmega.PushSharp.WebPush)
 
-# What's new
+## What's new
 1. Updated packages
 2. Added assembly signature
 3. Added PE signature
 
-# Why
+## Why
 
 Web push requires that push messages triggered from a backend be done via the
 [Web Push Protocol](https://tools.ietf.org/html/draft-ietf-webpush-protocol)
@@ -20,17 +18,17 @@ that data according to the [Message Encryption for Web Push spec](https://tools.
 This package makes it easy to send messages and will also handle legacy support
 for browsers relying on GCM for message sending / delivery.
 
-# Install
+## Install
 
 Installation is simple, just install via NuGet.
 
     Install-Package AlphaOmega.PushSharp.WebPush
 
-# Demo Project
+## Demo Project
 
 There is a ASP.NET MVC Core demo project located [here](https://github.com/coryjthompson/WebPushDemo)
 
-# Usage
+## Usage
 
 The common use case for this library is an application server using
 a GCM API key and VAPID keys.
@@ -62,9 +60,9 @@ catch (WebPushException exception)
 }
 ```
 
-# API Reference
+## API Reference
 
-## SendNotificationAsync(pushSubscription, payload, vapidDetails|gcmAPIKey|options, cancellationToken)
+### SendNotificationAsync(pushSubscription, payload, vapidDetails|gcmAPIKey|options, cancellationToken)
 
 ```csharp
 var subscription = new PushSubscription(pushEndpoint, p256dh, auth);
@@ -88,7 +86,7 @@ catch (WebPushException exception)
 method will work without a GCM API Key and / or VAPID keys if the push service
 supports it.
 
-### Input
+#### Input
 
 **Push Subscription**
 
@@ -117,9 +115,9 @@ request only. This overrides any API key set via `setGCMAPIKey()`.
 retained by the push service (by default, four weeks).
 - **headers** is an object with all the extra headers you want to add to the request.
 
-<hr />
+---
 
-## GenerateVapidKeys()
+### GenerateVapidKeys()
 
 ```csharp
 VapidDetails vapidKeys = VapidHelper.GenerateVapidKeys();
@@ -129,11 +127,11 @@ Console.WriteLine("Public {0}", vapidKeys.PublicKey);
 Console.WriteLine("Private {0}", vapidKeys.PrivateKey);
 ```
 
-### Input
+#### Input
 
 None.
 
-### Returns
+#### Returns
 
 Returns a VapidDetails object with **PublicKey** and **PrivateKey** values populated which are
 URL Safe Base64 encoded strings.
@@ -141,15 +139,15 @@ URL Safe Base64 encoded strings.
 > **Note:** You should create these keys once, store them and use them for all
 > future messages you send.
 
-<hr />
+---
 
-## SetGCMAPIKey(apiKey)
+### SetGCMAPIKey(apiKey)
 
 ```csharp
 webPushClient.SetGCMAPIKey(@"your-gcm-key");
 ```
 
-### Input
+#### Input
 
 This method expects the GCM API key that is linked to the `gcm_sender_id ` in
 your web app manifest.
@@ -157,13 +155,13 @@ your web app manifest.
 You can use a GCM API Key from the Google Developer Console or the
 *Cloud Messaging* tab under a Firebase Project.
 
-### Returns
+#### Returns
 
 None.
 
-<hr />
+---
 
-## GetVapidHeaders(audience, subject, publicKey, privateKey, expiration)
+### GetVapidHeaders(audience, subject, publicKey, privateKey, expiration)
 
 ```csharp
 Uri uri = new Uri(subscription.Endpoint);
@@ -180,7 +178,7 @@ Dictionary<string, string> vapidHeaders = VapidHelper.GetVapidHeaders(
 The *GetVapidHeaders()* method will take in the values needed to create
 an Authorization and Crypto-Key header.
 
-### Input
+#### Input
 
 The `GetVapidHeaders()` method expects the following input:
 
@@ -189,20 +187,20 @@ The `GetVapidHeaders()` method expects the following input:
 - *publicKey*: the VAPID public key.
 - *privateKey*: the VAPID private key.
 
-### Returns
+#### Returns
 
 This method returns a Dictionary<string, string> intended to be headers of a web request. It will contain the following keys:
 
 - *Authorization*
 - *Crypto-Key*.
 
-# Help
+## Help
 
 **Service Worker Cookbook**
 
 The [Service Worker Cookbook](https://serviceworke.rs/) is full of Web Push examples.
 
-# Credits
+## Credits
 - Ported from https://github.com/web-push-libs/web-push.
 - Original Encryption code from https://github.com/LogicSoftware/WebPushEncryption
 - Original WebPush authors: https://github.com/web-push-libs/web-push-csharp
