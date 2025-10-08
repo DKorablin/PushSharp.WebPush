@@ -82,8 +82,10 @@ jobs:
       run: dotnet nuget push ${{github.workspace}}\bin\nupkg\ --skip-duplicate --api-key ${{secrets.GITHUB_TOKEN}} --source https://nuget.pkg.github.com/DKorablin/index.json
     - name: Deploying package to NuGet
       run: dotnet nuget push ${{github.workspace}}\bin\nupkg\*.nupkg --skip-duplicate --api-key ${{secrets.NUGET_TOKEN}} --source https://api.nuget.org/v3/index.json
-    - name: Deploying SourceLink package to NuGet
-      run: dotnet nuget push ${{github.workspace}}\bin\nupkg\*.snupkg --skip-duplicate --api-key ${{secrets.NUGET_TOKEN}} --source https://api.nuget.org/v3/index.json
+#TODO: This step is not working. Because PE files are changed after PE certificate injected. So symbols do not match.
+#    There is only one solution possible for the time being: - Inject PDB inside PE files on build (DebugType=Embedded) but I don't like this approach
+#    - name: Deploying SourceLink package to NuGet
+#      run: dotnet nuget push ${{github.workspace}}\bin\nupkg\*.snupkg --skip-duplicate --api-key ${{secrets.NUGET_TOKEN}} --source https://api.nuget.org/v3/index.json
     - name: Zipping artifacts
       run: |
         $basePath = "${{ github.workspace }}\bin\Release"
