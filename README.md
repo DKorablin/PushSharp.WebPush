@@ -9,6 +9,9 @@
 3. Added PE file signing. (S/N: 00c18bc05b61a77408c694bd3542d035)
 4. Added CI/CD pipelines
 5. Limited number of builds: .NET 4.8 and .NET Standard 2.0 only (I will gladly return the rest if needed.)
+6. Removed generic options argument and replaced with strongly typed parameters.
+7. Changed SetGcmApiKey(...) from method to property.
+8. Marked GcmApiKey property as deprecated.
 
 ## Why
 
@@ -53,8 +56,8 @@ var vapidDetails = new VapidDetails(subject, publicKey, privateKey);
 var webPushClient = new WebPushClient();
 try
 {
-	await webPushClient.SendNotificationAsync(subscription, "payload", vapidDetails);
-    //await webPushClient.SendNotificationAsync(subscription, "payload", gcmAPIKey);
+	await webPushClient.SendNotificationAsync(subscription, "payload", vapidDetails: vapidDetails);
+    //await webPushClient.SendNotificationAsync(subscription, "payload", gcmAPIKey: gcmAPIKey);
 }
 catch (WebPushException exception)
 {
@@ -64,19 +67,18 @@ catch (WebPushException exception)
 
 ## API Reference
 
-### SendNotificationAsync(pushSubscription, payload, vapidDetails|gcmAPIKey|options, cancellationToken)
+### SendNotificationAsync(pushSubscription, payload, vapidDetails|gcmAPIKey, cancellationToken)
 
 ```csharp
 var subscription = new PushSubscription(pushEndpoint, p256dh, auth);
 
-var options = new Dictionary<string,object>();
-options["vapidDetails"] = new VapidDetails(subject, publicKey, privateKey);
-//options["gcmAPIKey"] = "[your key here]";
+var vapidDetails = new VapidDetails(subject, publicKey, privateKey);
+// var gcmAPIKey = "[your key here]";
 
 var webPushClient = new WebPushClient();
 try
 {
-	webPushClient.SendNotificationAsync(subscription, "payload", options);
+	webPushClient.SendNotificationAsync(subscription, "payload", vapidDetails: vapidDetails, gcmAPIKey: gcmAPIKey);
 }
 catch (WebPushException exception)
 {
@@ -106,15 +108,11 @@ have a *keys* object with *p256dh* and *auth* values.
 
 **Options**
 
-Options is an optional argument that if defined should be an Dictionary<string,object> containing
-any of the following values defined, although none of them are required.
-
 - **gcmAPIKey** can be a GCM API key to be used for this request and this
-request only. This overrides any API key set via `setGCMAPIKey()`.
+request only. This overrides any API key set via `GcmApiKey` property.
 - **vapidDetails** should be a VapidDetails object with *subject*, *publicKey* and
 *privateKey* values defined. These values should follow the [VAPID Spec](https://tools.ietf.org/html/draft-thomson-webpush-vapid).
-- **TTL** is a value in seconds that describes how long a push message is
-retained by the push service (by default, four weeks).
+- **TTL** is a value in seconds that describes how long a push message is retained by the push service (by default, four weeks).
 - **headers** is an object with all the extra headers you want to add to the request.
 
 ---
@@ -143,19 +141,17 @@ URL Safe Base64 encoded strings.
 
 ---
 
-### SetGCMAPIKey(apiKey)
+### GcmApiKey(apiKey) [deprecated]
 
 ```csharp
-webPushClient.SetGCMAPIKey("your-gcm-key");
+webPushClient.GcmApiKey = "your-gcm-key";
 ```
 
 #### Input
 
-This method expects the GCM API key that is linked to the `gcm_sender_id ` in
-your web app manifest.
+This method expects the GCM API key that is linked to the `gcm_sender_id ` in your web app manifest.
 
-You can use a GCM API Key from the Google Developer Console or the
-*Cloud Messaging* tab under a Firebase Project.
+You can use a GCM API Key from the Google Developer Console or the *Cloud Messaging* tab under a Firebase Project.
 
 #### Returns
 
@@ -177,8 +173,7 @@ Dictionary<string, string> vapidHeaders = VapidHelper.GetVapidHeaders(
 );
 ```
 
-The *GetVapidHeaders()* method will take in the values needed to create
-an Authorization and Crypto-Key header.
+The *GetVapidHeaders()* method will take in the values needed to create an Authorization and Crypto-Key header.
 
 #### Input
 
