@@ -155,7 +155,7 @@ You can use a GCM API Key from the Google Developer Console or the *Cloud Messag
 
 #### Returns
 
-None.
+Previously this method returned the current GCM API key, but now it is deprecated.
 
 ---
 
