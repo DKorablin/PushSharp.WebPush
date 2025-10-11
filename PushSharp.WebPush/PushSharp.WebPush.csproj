@@ -4,16 +4,19 @@
 		<TargetFrameworks>net48;netstandard2.0</TargetFrameworks>
 		<GeneratePackageOnBuild>false</GeneratePackageOnBuild>
 		<GenerateAssemblyInfo>false</GenerateAssemblyInfo>
-		<Version>$(Version)</Version>
-		<Authors>Cory Thompson, Danila Korablin</Authors>
-		<Company />
-		<Product />
+	</PropertyGroup>
+	
+	<!--nuspec-->
+	<PropertyGroup>
 		<PackageId>AlphaOmega.PushSharp.WebPush</PackageId>
-		<Description>Web Push library for C#</Description>
-		<RepositoryUrl>https://github.com/DKorablin/PushSharp.WebPush</RepositoryUrl>
-		<PackageTags>web push notifications vapid</PackageTags>
+		<Version>$(Version)</Version>
+		<Title>Web Push library for C#</Title>
+		<Description>Web push requires that push messages triggered from a backend be done via the Web Push Protocol and if you want to send data with your push message, you must also encrypt that data according to the Message Encryption for Web Push spec.</Description>
+		<Authors>Cory Thompson, Danila Korablin</Authors>
 		<PackageReadmeFile>README.md</PackageReadmeFile>
 		<PackageLicenseFile>LICENSE.md</PackageLicenseFile>
+		<RepositoryUrl>https://github.com/DKorablin/PushSharp.WebPush</RepositoryUrl>
+		<PackageTags>web push notifications vapid</PackageTags>
 	</PropertyGroup>
 
 	<ItemGroup>
@@ -23,8 +26,7 @@
 
 	<ItemGroup>
 		<PackageReference Include="Portable.BouncyCastle" />
-		<PackageReference Include="Microsoft.SourceLink.GitHub" />
-		<PackageReference Include="SonarAnalyzer.CSharp" />
+		<PackageReference Include="Microsoft.SourceLink.GitHub" PrivateAssets="All"/>
 	</ItemGroup>
 
 	<ItemGroup>

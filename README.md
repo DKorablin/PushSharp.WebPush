@@ -5,9 +5,10 @@
 
 ## What's new
 1. Updated NuGet packages to the latest versions
-2. Added assembly signature
-3. Added PE signature
-4. Limited number of builds: .NET 4.8 and .NET Standard 2.0 only (I will gladly return the rest if needed.)
+2. Added assembly signature (PublicKeyToken=a8ac5fc45c3adb8d)
+3. Added PE file signing. (S/N: 00c18bc05b61a77408c694bd3542d035)
+4. Added CI/CD pipelines
+5. Limited number of builds: .NET 4.8 and .NET Standard 2.0 only (I will gladly return the rest if needed.)
 
 ## Why
 
