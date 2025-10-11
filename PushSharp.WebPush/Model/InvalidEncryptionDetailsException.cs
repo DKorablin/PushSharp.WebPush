@@ -8,8 +8,9 @@ namespace WebPush.Model
 		/// <summary>Creates a new <see cref="InvalidEncryptionDetailsException"/> instance.</summary>
 		/// <param name="message">Description of the encryption failure.</param>
 		/// <param name="pushSubscription">The subscription whose encryption parameters were invalid.</param>
-		public InvalidEncryptionDetailsException(String message, PushSubscription pushSubscription)
-			: base(message)
+		/// <param name="innerException">The source exception information.</param>
+		public InvalidEncryptionDetailsException(String message, PushSubscription pushSubscription, Exception innerException)
+			: base(message, innerException)
 			=> this.PushSubscription = pushSubscription;
 
 		/// <summary>The subscription whose encryption parameters were invalid.</summary>

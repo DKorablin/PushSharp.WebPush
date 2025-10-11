@@ -1,10 +1,9 @@
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using RichardSzalay.MockHttp;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using RichardSzalay.MockHttp;
 using WebPush.Model;
 
 namespace WebPush.Test
@@ -40,28 +39,17 @@ namespace WebPush.Test
 			var gcmAPIKey = "teststring";
 			var subscription = new PushSubscription(TestGcmEndpoint, TestPublicKey, TestPrivateKey);
 
-			var options = new Dictionary<String, Object>
-			{
-				["gcmAPIKey"] = gcmAPIKey
-			};
-			var message = client.GenerateRequestDetails(subscription, "test payload", options);
+			var message = client.GenerateRequestDetails(subscription, "test payload", gcmAPIKey: gcmAPIKey);
 			var authorizationHeader = message.Headers.GetValues("Authorization").First();
 
 			Assert.AreEqual("key=" + gcmAPIKey, authorizationHeader);
-
-			// Test previous incorrect casing of gcmAPIKey
-			var options2 = new Dictionary<String, Object>
-			{
-				["gcmApiKey"] = gcmAPIKey
-			};
-			Assert.Throws<ArgumentException>(() => client.GenerateRequestDetails(subscription, "test payload", options2));
 		}
 
 		[TestMethod]
 		public void TestSetGcmApiKey()
 		{
 			var gcmAPIKey = "teststring";
-			client.SetGcmApiKey(gcmAPIKey);
+			client.GcmApiKey = gcmAPIKey;
 			var subscription = new PushSubscription(TestGcmEndpoint, TestPublicKey, TestPrivateKey);
 			var message = client.GenerateRequestDetails(subscription, "test payload");
 			var authorizationHeader = message.Headers.GetValues("Authorization").First();
@@ -70,17 +58,11 @@ namespace WebPush.Test
 		}
 
 		[TestMethod]
-		public void TestSetGCMAPIKeyEmptyString()
-		{
-			Assert.Throws<ArgumentException>(() => client.SetGcmApiKey(String.Empty));
-		}
-
-		[TestMethod]
 		public void TestSetGcmApiKeyNonGcmPushService()
 		{
 			// Ensure that the API key doesn't get added on a service that doesn't accept it.
 			var gcmAPIKey = "teststring";
-			client.SetGcmApiKey(gcmAPIKey);
+			client.GcmApiKey = gcmAPIKey;
 			var subscription = new PushSubscription(TestFirefoxEndpoint, TestPublicKey, TestPrivateKey);
 			var message = client.GenerateRequestDetails(subscription, "test payload");
 
@@ -90,8 +72,8 @@ namespace WebPush.Test
 		[TestMethod]
 		public void TestSetGcmApiKeyNull()
 		{
-			client.SetGcmApiKey("somestring");
-			client.SetGcmApiKey(null);
+			client.GcmApiKey = "somestring";
+			client.GcmApiKey = null;
 
 			var subscription = new PushSubscription(TestGcmEndpoint, TestPublicKey, TestPrivateKey);
 			var message = client.GenerateRequestDetails(subscription, "test payload");
@@ -116,7 +98,7 @@ namespace WebPush.Test
 		[TestMethod]
 		public void TestFcmAddsAuthorizationHeader()
 		{
-			client.SetGcmApiKey("somestring");
+			client.GcmApiKey = "somestring";
 			var subscription = new PushSubscription(TestFcmEndpoint, TestPublicKey, TestPrivateKey);
 			var message = client.GenerateRequestDetails(subscription, "test payload");
 			var authorizationHeader = message.Headers.GetValues("Authorization").First();

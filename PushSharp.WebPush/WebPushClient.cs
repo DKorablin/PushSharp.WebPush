@@ -56,19 +56,12 @@ namespace WebPush
 			}
 		}
 
-		/// <inheritdoc />
-		public void SetGcmApiKey(String gcmApiKey)
+		public String GcmApiKey
 		{
-			if(gcmApiKey == null)
-			{
-				this._gcmApiKey = null;
-				return;
-			}
-
-			if(String.IsNullOrEmpty(gcmApiKey))
-				throw new ArgumentNullException(nameof(gcmApiKey), "The GCM API Key should be a non-empty string or null.");
-
-			this._gcmApiKey = gcmApiKey;
+			get => this._gcmApiKey;
+			set => this._gcmApiKey = String.IsNullOrEmpty(value)
+				? null
+				: value;
 		}
 
 		/// <inheritdoc />
@@ -86,7 +79,7 @@ namespace WebPush
 			=> this.SetVapidDetails(new VapidDetails(subject, publicKey, privateKey));
 
 		/// <inheritdoc />
-		public HttpRequestMessage GenerateRequestDetails(PushSubscription subscription, String payload, Dictionary<String, Object> options = null)
+		public HttpRequestMessage GenerateRequestDetails(PushSubscription subscription, String payload, String gcmAPIKey = null, VapidDetails vapidDetails = null, Int32? ttl = null, Dictionary<String, Object> extraHeaders = null)
 		{
 			if(!Uri.IsWellFormedUriString(subscription.Endpoint, UriKind.Absolute))
 				throw new ArgumentException("You must pass in a subscription with at least a valid endpoint", nameof(subscription));
@@ -96,41 +89,16 @@ namespace WebPush
 			if(!String.IsNullOrEmpty(payload) && (String.IsNullOrEmpty(subscription.Auth) || String.IsNullOrEmpty(subscription.P256DH)))
 				throw new ArgumentException("To send a message with a payload, the subscription must have 'auth' and 'p256dh' keys.", nameof(payload));
 
-			var currentGcmApiKey = this._gcmApiKey;
-			var currentVapidDetails = this._vapidDetails;
-			var timeToLive = DefaultTtl;
-			var extraHeaders = new Dictionary<String, Object>();
-
-			if(options != null)
-			{
-				var validOptionsKeys = new List<String> { "headers", "gcmAPIKey", "vapidDetails", "TTL" };
-				foreach(var key in options.Keys)
-				{
-					if(!validOptionsKeys.Contains(key))
-						throw new ArgumentException(key + " is an invalid options. The valid options are" + String.Join(",", validOptionsKeys));
-				}
-
-				if(options.ContainsKey("headers"))
-					extraHeaders = options["headers"] as Dictionary<String, Object>
-						?? throw new ArgumentException("options.headers must be of type Dictionary<string,object>");
-
-				if(options.ContainsKey("gcmAPIKey"))
-					currentGcmApiKey = options["gcmAPIKey"] as String
-						?? throw new ArgumentException("options.gcmAPIKey must be of type string");
-
-				if(options.ContainsKey("vapidDetails"))
-					currentVapidDetails = options["vapidDetails"] as VapidDetails
-						?? throw new ArgumentException("options.vapidDetails must be of type VapidDetails");
-
-				if(options.ContainsKey("TTL"))
-					timeToLive = options["TTL"] as Int32? ?? throw new ArgumentException("options.TTL must be of type int");
-			}
+			var currentGcmApiKey = gcmAPIKey ?? this._gcmApiKey;
+			var currentVapidDetails = vapidDetails ?? this._vapidDetails;
+			var timeToLive = ttl ?? WebPushClient.DefaultTtl;
 
 			String cryptoKeyHeader = null;
 			request.Headers.Add("TTL", timeToLive.ToString());
 
-			foreach(var header in extraHeaders)
-				request.Headers.Add(header.Key, header.Value.ToString());
+			if(extraHeaders != null)
+				foreach(var header in extraHeaders)
+					request.Headers.Add(header.Key, header.Value.ToString());
 
 			if(!String.IsNullOrEmpty(payload))
 			{
@@ -183,55 +151,29 @@ namespace WebPush
 			try
 			{
 				return Encryptor.Encrypt(subscription.P256DH, subscription.Auth, payload);
-			} catch(Exception ex)
+			} catch(Exception exc)
 			{
-				if(ex is FormatException || ex is ArgumentException)
-					throw new InvalidEncryptionDetailsException("Unable to encrypt the payload with the encryption key of this subscription.", subscription);
+				if(exc is FormatException || exc is ArgumentException)
+					throw new InvalidEncryptionDetailsException("Unable to encrypt the payload with the encryption key of this subscription.", subscription, exc);
 
 				throw;
 			}
 		}
 
 		/// <inheritdoc />
-		public void SendNotification(PushSubscription subscription, String payload = null, Dictionary<String, Object> options = null)
-			=> this.SendNotificationAsync(subscription, payload, options).ConfigureAwait(false).GetAwaiter().GetResult();
+		public void SendNotification(PushSubscription subscription, String payload = null, String gcmAPIKey = null, VapidDetails vapidDetails = null, Int32? ttl = null, Dictionary<String, Object> extraHeaders = null)
+			=> this.SendNotificationAsync(subscription, payload, gcmAPIKey: gcmAPIKey, vapidDetails: vapidDetails, ttl: ttl, extraHeaders: extraHeaders)
+			.ConfigureAwait(false)
+			.GetAwaiter()
+			.GetResult();
 
 		/// <inheritdoc />
-		public void SendNotification(PushSubscription subscription, String payload, VapidDetails vapidDetails)
+		public async Task SendNotificationAsync(PushSubscription subscription, String payload = null, String gcmAPIKey = null, VapidDetails vapidDetails = null, Int32? ttl = null, Dictionary<String, Object> extraHeaders = null, CancellationToken cancellationToken = default)
 		{
-			var options = new Dictionary<String, Object> { ["vapidDetails"] = vapidDetails };
-			this.SendNotification(subscription, payload, options);
-		}
-
-		/// <inheritdoc />
-		public void SendNotification(PushSubscription subscription, String payload, String gcmApiKey)
-		{
-			var options = new Dictionary<String, Object> { ["gcmAPIKey"] = gcmApiKey };
-			this.SendNotification(subscription, payload, options);
-		}
-
-		/// <inheritdoc />
-		public async Task SendNotificationAsync(PushSubscription subscription, String payload = null, Dictionary<String, Object> options = null, CancellationToken cancellationToken = default)
-		{
-			var request = this.GenerateRequestDetails(subscription, payload, options);
+			var request = this.GenerateRequestDetails(subscription, payload, gcmAPIKey: gcmAPIKey, vapidDetails: vapidDetails, ttl: ttl, extraHeaders: extraHeaders);
 			var response = await this.HttpClient.SendAsync(request, cancellationToken).ConfigureAwait(false);
 
 			await HandleResponse(response, subscription).ConfigureAwait(false);
-		}
-
-		/// <inheritdoc />
-		public async Task SendNotificationAsync(PushSubscription subscription, String payload,
-			VapidDetails vapidDetails, CancellationToken cancellationToken = default)
-		{
-			var options = new Dictionary<String, Object> { ["vapidDetails"] = vapidDetails };
-			await this.SendNotificationAsync(subscription, payload, options, cancellationToken).ConfigureAwait(false);
-		}
-
-		/// <inheritdoc />
-		public async Task SendNotificationAsync(PushSubscription subscription, String payload, String gcmApiKey, CancellationToken cancellationToken = default)
-		{
-			var options = new Dictionary<String, Object> { ["gcmAPIKey"] = gcmApiKey };
-			await this.SendNotificationAsync(subscription, payload, options, cancellationToken).ConfigureAwait(false);
 		}
 
 		/// <summary>Handle Web Push responses.</summary>
@@ -279,7 +221,18 @@ namespace WebPush
 		/// <summary>Disposes the underlying <see cref="HttpClient"/> if it was created internally.</summary>
 		public void Dispose()
 		{
-			if(this._httpClient != null && this._isHttpClientInternallyCreated)
+			this.Dispose(true);
+			GC.SuppressFinalize(this);
+		}
+
+		~WebPushClient()
+			=> this.Dispose(false);
+
+		/// <summary>Core dispose logic following the standard .NET dispose pattern.</summary>
+		/// <param name="disposing">True if called from Dispose; false if from finalizer.</param>
+		protected virtual void Dispose(Boolean disposing)
+		{
+			if(disposing && this._httpClient != null && this._isHttpClientInternallyCreated)
 			{
 				this._httpClient.Dispose();
 				this._httpClient = null;
