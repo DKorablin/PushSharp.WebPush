@@ -1,4 +1,4 @@
-# PushSharp.WebPush
+﻿# PushSharp.WebPush
 
 [![Auto build](https://github.com/DKorablin/PushSharp.WebPush/actions/workflows/release.yml/badge.svg)](https://github.com/DKorablin/PushSharp.WebPush/releases/latest)
 [![Nuget](https://img.shields.io/nuget/v/AlphaOmega.PushSharp.WebPush)](https://img.shields.io/nuget/v/AlphaOmega.PushSharp.WebPush)

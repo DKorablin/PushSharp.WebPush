@@ -1,4 +1,4 @@
-<Project>
+﻿<Project>
 	<PropertyGroup Condition="'$(Version)' == ''">
 		<Version>1.0.12.0</Version>
 	</PropertyGroup>
