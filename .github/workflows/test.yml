@@ -18,6 +18,12 @@ jobs:
     - uses: actions/checkout@v4
       with:
         submodules: true
+    - name: Decoding strong-name key
+      id: sign_key_file
+      uses: timheuer/base64-to-file@v1.2
+      with:
+        fileName: 'Signature.snk'
+        encodedString: ${{secrets.SIGN_ASM_KEY}}
     - name: Setup .NET
       uses: actions/setup-dotnet@v4
       with:
@@ -33,4 +39,7 @@ jobs:
       run: dotnet restore
     - name: Testing .NET
       run: |
-        dotnet test --no-restore --framework net8.0 --configuration Release
+        dotnet test --no-restore --framework net8.0
+        /p:configuration=Release
+        /p:SignAssembly=true
+        /p:AssemblyOriginatorKeyFile="${{steps.sign_key_file.outputs.filePath}}"
