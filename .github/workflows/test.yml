@@ -8,6 +8,7 @@ on:
 
 env:
   SolutionName: ${{github.event.repository.name}}
+  DotNetVersion: 8.0.x
 
 jobs:
   test_net:
@@ -20,7 +21,16 @@ jobs:
     - name: Setup .NET
       uses: actions/setup-dotnet@v4
       with:
-        dotnet-version: 8.0.x
+        dotnet-version: ${{env.DotNetVersion}}
+    - name: Caching NuGet packages
+      uses: actions/cache@v4
+      with:
+        path: ~/.nuget/packages
+        key: ${{ runner.os }}-nuget-${{ hashFiles('**/packages.lock.json') }}
+        restore-keys: |
+          ${{ runner.os }}-nuget-
+    - name: Restore
+      run: dotnet restore
     - name: Testing .NET
       run: |
         dotnet test --no-restore --framework net8.0 --configuration Release
