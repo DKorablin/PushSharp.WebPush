@@ -17,6 +17,5 @@
 		<PackageVersion Include="MSTest.TestAdapter" Version="4.0.0" />
 		<PackageVersion Include="MSTest.TestFramework" Version="4.0.0" />
 		<PackageVersion Include="RichardSzalay.MockHttp" Version="6.0.0" />
-		<PackageVersion Include="coverlet.collector" Version="6.0.4" />
 	</ItemGroup>
 </Project>

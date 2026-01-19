@@ -18,7 +18,6 @@
 		<PackageReference Include="MSTest.TestAdapter" />
 		<PackageReference Include="MSTest.TestFramework" />
 		<PackageReference Include="RichardSzalay.MockHttp" />
-		<PackageReference Include="coverlet.collector" />
 	</ItemGroup>
 
 	<ItemGroup>

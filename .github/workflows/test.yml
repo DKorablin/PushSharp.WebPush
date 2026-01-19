@@ -43,21 +43,3 @@ jobs:
         /p:Configuration=Release
         /p:SignAssembly=true
         /p:AssemblyOriginatorKeyFile="${{steps.sign_key_file.outputs.filePath}}"
-        /p:CollectCoverage=true
-        /p:CoverletOutputFormat=cobertura
-        /p:CoverletOutput=./coverage/
-    - name: Upload coverage to Codecov
-      uses: codecov/codecov-action@v3
-      with:
-        files: ./WebPush.Test/coverage/coverage.cobertura.xml
-        flags: unittests
-        name: codecov-umbrella
-        fail_ci_if_error: false
-    - name: Generate coverage summary
-      uses: irongut/CodeCoverageSummary@v1.3.0
-      if: always()
-      with:
-        filename: ./WebPush.Test/coverage/coverage.cobertura.xml
-        badge: true
-        format: markdown
-        output: both
