@@ -38,7 +38,7 @@ jobs:
     - name: Restore
       run: dotnet restore
     - name: Testing .NET
-      run: |
+      run: >
         dotnet test --no-restore --framework net8.0
         /p:configuration=Release
         /p:SignAssembly=true
