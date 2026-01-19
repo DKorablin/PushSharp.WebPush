@@ -43,3 +43,20 @@ jobs:
         /p:Configuration=Release
         /p:SignAssembly=true
         /p:AssemblyOriginatorKeyFile="${{steps.sign_key_file.outputs.filePath}}"
+        /p:CollectCoverage=true
+        /p:CoverletOutputFormat=cobertura
+        /p:CoverletOutput=./coverage/
+    - name: Upload coverage to Codecov
+      uses: codecov/codecov-action@v3
+      with:
+        files: ./WebPush.Test/coverage/coverage.cobertura.xml
+        flags: unittests
+        name: codecov-umbrella
+        fail_ci_if_error: false
+    - name: Publish coverage report
+      uses: dorny/test-reporter@v1
+      if: success() || failure()
+      with:
+        name: Coverage Report
+        path: ./WebPush.Test/coverage/coverage.cobertura.xml
+        reporter: 'java-junit'
