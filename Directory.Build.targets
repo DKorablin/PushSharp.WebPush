@@ -1,4 +1,4 @@
-<Project>
+﻿<Project>
 	<Target Name="BeforeBuild">
 		<ItemGroup>
 			<AssemblyAttributes Include="AssemblyVersion">
