@@ -4,7 +4,6 @@
 		<TargetFrameworks>net48;net8.0</TargetFrameworks>
 		<IsTestProject>true</IsTestProject>
 		<IsPackable>false</IsPackable>
-		<Configuration>Debug</Configuration>
 		<GenerateAssemblyInfo>false</GenerateAssemblyInfo>
 		<Parallelize>true</Parallelize>
 	</PropertyGroup>
