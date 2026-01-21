@@ -1,7 +1,7 @@
 ﻿# PushSharp.WebPush
 
 [![Auto build](https://github.com/DKorablin/PushSharp.WebPush/actions/workflows/release.yml/badge.svg)](https://github.com/DKorablin/PushSharp.WebPush/releases/latest)
-[![Nuget](https://img.shields.io/nuget/v/AlphaOmega.PushSharp.WebPush)](https://img.shields.io/nuget/v/AlphaOmega.PushSharp.WebPush)
+[![Nuget](https://img.shields.io/nuget/v/AlphaOmega.PushSharp.WebPush)](https://www.nuget.org/packages/AlphaOmega.PushSharp.WebPush)
 
 ## What's new
 1. Updated NuGet packages to the latest versions
